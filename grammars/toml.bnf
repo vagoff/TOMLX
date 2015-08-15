@@ -3,7 +3,7 @@ file = entry* table*
 table = head entry*
 head = "[" path "]" | "[[" path "]]"
 path = ( key "." )* key
-entry = key "=" value
+entry = path "=" value
 
 array = "[" ( value ( "," value )* )? "]"
 object = "{" entry ( "," entry )* "}"
