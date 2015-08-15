@@ -1,0 +1,198 @@
+{
+  function isSet(value) { return typeof value != "undefined"; }
+  function isObj(value) { return value.constructor == Object; }
+  function isArr(value) { return value instanceof Array; }
+
+  function merge(objects) {
+    var i, p, src, dst = {};
+    for(i=0; i<objects.length; i++) {
+      src = objects[i];
+      for(p in src) {
+        if(!isSet(dst[p])) {
+          dst[p] = src[p];
+        }
+        else if(isObj(src[p]) && isObj(dst[p])) {
+          dst[p] = merge( [dst[p], src[p]] );
+        }
+        else if(isArr(src[p]) && isArr(dst[p])) {
+          dst[p] = dst[p].concat(src[p]);
+        }
+        else {
+          error('"'+p+'" is already defined.');
+        }
+      }
+    }
+    return dst;
+  }
+
+  // ex: returns {a:{b:{c:1}}} for args ["a","b","c"] and 1
+  function path(path, value) {
+    if(!(path instanceof Array)) return;
+    var rootObj = {};
+    var obj = rootObj;
+    for(var i=0; i<path.length-1; i++){
+      if(typeof obj[path[i]] == "undefined") obj[path[i]] = {};
+      obj = obj[path[i]];
+    }
+    obj[path[i]] = value;
+    return rootObj;
+  }
+
+  function pair(key, value) {
+    var obj = {};
+    obj[key] = value;
+    return obj;
+  }
+
+}
+
+start
+  = toml
+
+toml
+  = __? g:global __? s:(section)*
+  { return merge( [g, merge(s)] ); }
+
+  global
+    = dictionary
+
+  section
+    = table // [table]
+    / stack // [[stack]]
+
+    table
+      = "[" _ p:path _ "]" __? _ d:dictionary
+      { return path(p,d); }
+
+    stack
+      = "[[" _ p:path _ "]]" __? _ d:dictionary
+      { return path(p,[d]); }
+
+      path
+        = k:key _ "." _ p:path { p.unshift(k); return p; }
+        / k:key { return [k]; }
+
+value
+  = object
+  / array
+  / scalar
+
+  scalar "value"
+    = number
+    / regex
+    / string
+
+    number
+      = &(sign digs frac exp)
+        s:sign i:digs f:frac e:exp
+        { return s*(i+f)*e }
+      / &(sign digs exp)
+        s:sign i:digs e:exp
+        { return s*i*e }
+
+      sign
+        = s:[+-]?
+        { return s=="-"? -1 : 1 }
+
+      digs
+        = d:[0-9]+
+        { return parseInt( d.join("") ) }
+
+      frac
+        = "." d:[0-9]+
+        { return parseInt(d.join(""))
+          / Math.pow(10,d.length)}
+
+      exp
+        = ("E"/"e") s:sign i:digs
+                      { return Math.pow(10, s*i) }
+        / "%"         { return Math.pow(10, -2)  }
+        / ("ki"/"Ki") { return Math.pow(2, 10)   }
+        / "Mi"        { return Math.pow(2, 20)   }
+        / "Gi"        { return Math.pow(2, 30)   }
+        / ("k"/"K")   { return Math.pow(10, 3)   }
+        / "M"         { return Math.pow(10, 6)   }
+        / "G"         { return Math.pow(10, 9)   }
+        / ""          { return 1                 }
+
+    string
+      = quoted
+      / literal
+      / bare
+
+      quoted
+        = '"' s:strchr* '"'
+        { return s.join("") }
+
+        strchr
+          = [^\\\"\r\n]
+          / '\\\\' { return '\\' }
+          / '\\"'  { return '"'  }
+          / '\\b'  { return '\b' }
+          / '\\t'  { return '\t' }
+          / '\\n'  { return '\n' }
+          / '\\f'  { return '\f' }
+          / '\\r'  { return '\r' }
+
+      literal
+        = "'" s:[^']* "'"
+        { return s.join("") }
+
+      bare
+        = a:[$A-Z_a-z] s:[$0-9A-Z_a-z]* { return a+s.join("") }
+
+    regex
+      = "/" s:regexchr* "/"
+        { return { regexp: s.join("") } }
+      / "^" s:baregexchr* "$"
+        { return { regexp: "^"+s.join("")+"$" } }
+
+      regexchr
+        = [^\\/\r\n]
+        / "\\/" { return "/" }
+        / "\\" chr:. { return "\\"+chr }
+
+      baregexchr
+        = [^\\$\r\n]
+        / "\\$" { return "$" }
+        / "\\" chr:. { return "\\"+chr }
+
+  array
+    = "[" __? _ s:sequence __? _ "]"
+    { return s }
+
+    sequence
+      = v:value _ (","/__) _ s:sequence { s.unshift(v); return s }
+      / v:value { return [v] }
+      / "" { return [] }
+
+  object
+    = "{" __? _ d:dictionary __? _ "}" { return d }
+
+    dictionary
+      = p:pair _ (","/__) _ d:dictionary { return merge([p,d]) }
+      / p:pair { return p }
+      / "" { return {} }
+
+      pair
+        = k:key _ "."  _ v:pair   {return pair(k,v)}
+        / k:key _ "="? _ v:object {return pair(k,v)}
+        / k:key _ "="? _ v:array  {return pair(k,v)}
+        / k:key _ "="  _ v:scalar {return pair(k,v)}
+        / k:key                {return pair(k,true)}
+
+        key "key"
+          = string
+
+_ "space"
+  = whitespace*
+
+__ "new line"
+  = (whitespace* newline)+
+
+  whitespace
+    = [ \f\t\v]+
+
+  newline
+    = [\r\n]+
+    / "#" [^\r\n]* [\r\n]*

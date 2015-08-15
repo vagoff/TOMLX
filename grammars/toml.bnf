@@ -1,0 +1,17 @@
+file = entry* table*
+
+table = head entry*
+head = "[" path "]" | "[[" path "]]"
+path = ( key "." )* key
+entry = key "=" value
+
+array = "[" ( value ( "," value )* )? "]"
+object = "{" entry ( "," entry )* "}"
+boolean = "true" | "false"
+
+value = ( tag ":" )? ( array | object | number | ( "<" IDENT ">" )? string | boolean )
+tag = IDENT
+
+key = IDENT | string | number
+IDENT = #"[A-Za-z_][A-Za-z0-9_-]*"
+string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING

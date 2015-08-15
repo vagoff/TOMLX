@@ -1,0 +1,41 @@
+toml = entries@@global tables@@tables [(pair global tables)]
+
+tables =
+    '[' ->
+        (
+            '[' -> table2
+            _ -> table1
+        )
+    _ -> []
+
+table1 = keypath@@keypath ']' entries@@entries [(table1 keypath entries)]
+
+table2 = keypath@@keypath ']]' entries@@entries [(table2 keypath entries)]
+
+entries =
+    IDENT@key -> '=' value@value [(key_value key value)] entries
+    _ -> []
+
+keypath =
+    key
+    (
+        '.' -> key keypath
+        _ -> []
+    )
+
+key =
+    IDENT@n -> [n]
+    STRING@s -> [s]
+
+value =
+    NUMBER@v -> [(number v)]
+    STRING@s -> [(string s)]
+    '{' -> entries@@entries '}' [(object entries)]
+    '[' -> list@@items ']' [(list items)]
+
+list = value list_loop
+
+list_loop =
+    ',' -> value list_loop
+    _ -> []
+

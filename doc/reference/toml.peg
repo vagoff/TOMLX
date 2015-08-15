@@ -1,0 +1,62 @@
+grammar TOML.Document
+
+  document        <- key_group* <Document>
+
+  key_group       <- header:header_line? values:value_line+ ignore <KeyGroup>
+
+  header_line     <- ignore "[" key_name "]" line_end
+
+  key_name        <- key_segment ("." key_segment)*
+
+  key_segment     <- [^\[\]\.]+
+
+  value_line      <- ignore name ws "=" ws value line_end
+
+  name            <- (!space .)+
+
+  value           <- string / datetime / float / integer / boolean / array
+
+  array           <- (empty_array / string_array / datetime_array / float_array / integer_array / boolean_array / array_array) <Array>
+
+  string          <- "\"" ("\\" escape_char / [^"])* "\"" <String>
+
+  escape_char     <- "0" / "t" / "n" / "r" / "\"" / "\\"
+
+  digit           <- [0-9]
+
+  integer         <- "-"? [1-9] digit* <Integer>
+
+  float           <- integer "." digit+ <Float>
+
+  boolean         <- ("true" / "false") <Boolean>
+
+  datetime        <- year:([1-9] digit digit digit) "-"
+                     month:(digit digit) "-"
+                     day:(digit digit) "T"
+                     hour:(digit digit) ":"
+                     minute:(digit digit) ":"
+                     second:(digit digit)
+                     fraction:("." digit+)?
+                     "Z" <Datetime>
+
+  empty_array     <- "[" ws "]"
+  
+  string_array    <- "[" ws head:string   tail:(ws "," ws value:string)*   ws "]"
+  integer_array   <- "[" ws head:integer  tail:(ws "," ws value:integer)*  ws "]"
+  float_array     <- "[" ws head:float    tail:(ws "," ws value:float)*    ws "]"
+  boolean_array   <- "[" ws head:boolean  tail:(ws "," ws value:boolean)*  ws "]"
+  datetime_array  <- "[" ws head:datetime tail:(ws "," ws value:datetime)* ws "]"
+  array_array     <- "[" ws head:array    tail:(ws "," ws value:array)*    ws "]"
+
+  line_end        <- ws comment? !(!nl .)
+
+  ignore          <- (comment / space / nl)*
+
+  comment         <- "#" (!nl .)*
+
+  ws              <- space*
+
+  space           <- [ \t]
+
+  nl              <- "\r\n" / "\r" / "\n"
+
