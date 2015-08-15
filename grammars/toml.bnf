@@ -9,7 +9,7 @@ array = "[" ( value ( "," value )* )? "]"
 object = "{" entry ( "," entry )* "}"
 boolean = "true" | "false"
 
-value = ( tag ":" )? ( array | object | number | ( "<" IDENT ">" )? string | boolean )
+value = ( tag ":" )* ( array | object | number | ( "<" IDENT ">" )? string | boolean )
 tag = IDENT
 
 key = IDENT | string | number
