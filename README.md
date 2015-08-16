@@ -20,6 +20,10 @@ INISON is just JSON except:
 
 File extension is *.ison
 
+## Side notes
+
+Capitalized tags are type constructors, noncapitalized are converters or checkers.
+
 ## Grammar
 
 \<\<insert rendered railroad diagram picture here like at json.org\>\>
