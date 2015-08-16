@@ -1,6 +1,6 @@
 # INISON
 
-JSON is too bureaucratic and restricted, YAML is too freeform and complex -- INISON is just rigjt!
+JSON is too bureaucratic and restricted, YAML is too freeform and complex -- INISON is just right!
 
 Flexible enough and simple enough.
 
