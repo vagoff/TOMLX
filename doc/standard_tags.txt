@@ -1,3 +1,7 @@
 Date = YY-MM-DD
 Time = HH:MM | HH:MM:SS | HH:MM:SS.SSSSS...
-DateTime = ( YY-MM-DD_HH:MM | YY-MM-DD_HH:MM:SS | YY-MM-DD_HH:MM:SS.SSSSS... ) ( ~"Z[+-][0-9][0-9] )?
+DateTime = ( YY-MM-DD_HH:MM | YY-MM-DD_HH:MM:SS | YY-MM-DD_HH:MM:SS.SSSSS... ) ( ~"[+-][0-9][0-9] )?
+
+# Examples:
+# [section]
+# last_modified = DateTime:"2015-08-01_14:56+03"
