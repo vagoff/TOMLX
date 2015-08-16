@@ -1,8 +1,10 @@
 # INISON
 
-JSON is too bureaucratic and restricted, YAML is too freeform and complex -- INISON is just between!
+JSON is too bureaucratic and restricted, YAML is too freeform and complex -- INISON is just rigjt!
 
-Flexible enough and readable enough.
+Flexible enough and simple enough.
+
+Brings new life to old good INI files.
 
 INISON is just JSON except:
 
