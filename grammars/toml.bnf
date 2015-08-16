@@ -7,8 +7,8 @@ entry = keypath "=" value
 
 value = ( tag ":" )* untagged
 untagged = array | object | number | string | boolean
-array = "[" ( "," | value )* "]"
-object = "{" ( "," | entry )* "}"
+array = "[" value ( "," value )* ","? "]"
+object = "{" value ( "," value )* ","? "}"
 boolean = "true" | "false"
 
 tag = IDENT
