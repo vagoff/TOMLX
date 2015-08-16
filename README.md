@@ -12,7 +12,9 @@ INISON is just JSON except:
 * allowing bare identifiers as object keys {a=1}
 * # comments: {"a"=1} # my "A"
 * allowing trailing commas: [1,2,]
-* tagged values: {b=DATE:"2015-01-01",c=}
+* additional quote to disable escaping (')
+* python like triple quoting (""" and ''') to enable multiline strings (''' does not parse escapes)
+* tagged values: {b=DATE:"2015-01-01",c=PCRE:"/^x[0-9]/i"}
 * no NULL and NAN (use tags instead, {a=1,b=NaN:0,c=3,d=NULL:0})
 * toplevel INI like syntax for objects, so {a=1,b={c=2,d=3}} may be written as a=1 [b] c=2 d=3 which greatly improve readability and reduces {{}} clutter
 
