@@ -1,17 +1,20 @@
-file = entry* table*
+toplevel = entry* table* | value
 
 table = head entry*
-head = "[" path "]" | "[[" path "]]"
-path = ( key "." )* key
-entry = path "=" value
+head = "[" keypath "]" | "[[" keypath "]]"
+keypath = ( key "." )* key
+entry = keypath "=" value
 
-array = "[" ( value ( "," value )* )? "]"
-object = "{" entry ( "," entry )* "}"
+value = ( tag ":" )* untagged
+untagged = array | object | number | string | boolean
+array = "[" ( "," | value )* "]"
+object = "{" ( "," | entry )* "}"
 boolean = "true" | "false"
 
-value = ( tag ":" )* ( array | object | number | ( "<" IDENT ">" )? string | boolean )
 tag = IDENT
-
 key = IDENT | string | number
-IDENT = #"[A-Za-z_][A-Za-z0-9_-]*"
+number = FLOAT | INT
+IDENT = ~"[A-Za-z_][A-Za-z0-9_-]*"
+INT = ~"[0-9][0-9_]*"
+FLOAT = ( INT "." | "." INT | INT "." INT ) ( ~"[eE][+-]?" INT )?
 string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING
