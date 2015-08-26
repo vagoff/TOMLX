@@ -4,11 +4,12 @@ table = head entry*
 head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
 entry = keypath "=" value
+kv = key "=" value
 
 value = ( tag ":" )* untagged
 untagged = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
-object = "{" entry ( "," entry )* ","? "}"
+object = "{" kv ( "," kv )* ","? "}"
 boolean = "true" | "false"
 
 tag = IDENT
