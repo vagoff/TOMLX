@@ -9,7 +9,8 @@ kv = key "=" value
 value = ( tag ":" )* untagged
 untagged = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
-object = "{" kv ( "," kv )* ","? "}"
+object = "{" keyvalue ( "," keyvalue )* ","? "}"
+keyvalue = key ( "=" | ":" ) value
 boolean = "true" | "false"
 
 tag = IDENT
