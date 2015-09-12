@@ -1,4 +1,4 @@
-toplevel = entry* table* | value
+file = entry* table* | value
 
 table = head entry*
 head = "[" keypath "]" | "[[" keypath "]]"
