@@ -5,7 +5,7 @@ head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
 entry = keypath "=" value
 
-value = ( valtag "?" )* untagged | rawtag "!" (ANY - NL - SP)+
+value = ( valtag "?" )+ untagged | rawtag "!" (ANY - NL - SP)+
 untagged = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
 object = "{" keyvalue ( "," keyvalue )* ","? "}"
