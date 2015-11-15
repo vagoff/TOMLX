@@ -5,14 +5,15 @@ head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
 entry = keypath "=" value
 
-value = ( tag ":" )* untagged
+value = ( valtag "?" )* untagged | rawtag "!" (ANY - NL - SP)+
 untagged = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
 object = "{" keyvalue ( "," keyvalue )* ","? "}"
-keyvalue = key ( "=" | ":" ) value
+keyvalue = key ":" value
 boolean = "true" | "false"
 
-tag = IDENT
+valtag = IDENT
+rawtag = IDENT
 key = IDENT | string | number
 number = FLOAT | INT
 string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING
