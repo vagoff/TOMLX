@@ -5,15 +5,17 @@ head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
 entry = keypath "=" value
 
-value = ( valtag "?" )? untagged | rawtag "!" (ANY - NL - SP)+
-untagged = array | object | number | string | boolean
+value = ( tag "!" )? tagless
+tagless = array | object | number | string | boolean | typed | raw
+typed = type raw
+raw = "(" (ANY - NL)* ")"
 array = "[" value ( ","* value )* ","* "]"
 object = "{" keyvalue ( ","* keyvalue )* ","* "}"
 keyvalue = key ":" value
 boolean = "true" | "false"
 
-valtag = IDENT
-rawtag = IDENT
+tag = IDENT
+type = IDENT
 key = IDENT | string | number
 number = FLOAT | INT
 string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING
