@@ -1,4 +1,4 @@
-file = entry* table* | value
+file = entry* table*
 
 table = head entry*
 head = "[" keypath "]" | "[[" keypath "]]"
