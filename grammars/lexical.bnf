@@ -3,4 +3,5 @@ INTPART = ~"[0-9][0-9_]*"
 OCTINT = ( "+" | "-" )? "0o" ~"[0-7_]+"
 HEXINT = ( "+" | "-" )? "0x" ~"[0-7afAF_]+"
 DECINT = ( "+" | "-" )? INTPART
+BININT = ( "+" | "-" )? "0b" ~"[01_]+"
 FLOAT = ( "+" | "-" )? ( INTPART "." | "." INTPART | INTPART "." INTPART ) ( ~"[eE][+-]?" INTPART )?
