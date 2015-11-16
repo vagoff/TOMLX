@@ -8,7 +8,7 @@ entry = keypath "=" value?
 value = ( tag "@" )? tagless
 tagless = array | object | number | string | boolean | typed | raw
 typed = type raw # note for parser implementor: type and open par must be adjacent, no spaces or newlines allowed!
-raw = "(" (ANY - NL)* ")"
+raw = "(" (ANY - NL)* ")" # note than () [] {} parens must be balanced inside raw string
 array = "[" value ( ","* value )* ","* "]"
 object = "{" keyvalue ( ","* keyvalue )* ","* "}"
 keyvalue = key ":" value
