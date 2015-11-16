@@ -5,7 +5,7 @@ head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
 entry = keypath "=" value
 
-value = ( tag "!" )? tagless
+value = ( tag "@" )? tagless
 tagless = array | object | number | string | boolean | typed | raw
 typed = type raw # note for parser implementor: type and open par must be adjacent, no spaces or newlines allowed!
 raw = "(" (ANY - NL)* ")"
