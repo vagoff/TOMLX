@@ -9,7 +9,7 @@ Brings new life to old good INI files.
 INISON is just JSON except:
 
 * allowing bare identifiers as object keys {a:1}
-* # comments: {a:1} # my "A"
+* conventional unix style comments: {a:1} # my "A"
 * allowing trailing commas [1,2,] or no commas at all [1 2 3]
 * additional quote to disable escaping (')
 * python like triple quoting (""" and ''') to enable multiline strings (''' does not parse escapes)
