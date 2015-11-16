@@ -7,10 +7,8 @@ head = "[" keypath "]" NL | "[[" keypath "]]" NL
 keypath = ( key "." )* key
 entry = keypath "=" value? NL
 
-value = ( tag "@" )? tagless
-tagless = array | object | number | string | boolean | typed | raw
-typed = type raw # note for parser implementor: type and open par must be adjacent, no spaces or newlines allowed!
-raw = "(" (ANY - NL)* ")" # note than () [] {} parens must be balanced inside raw string
+value = tag? tagless # note mandatory tag adjacency to [ { ' "
+tagless = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
 object = "{" keyvalue ( "," keyvalue )* ","? "}"
 keyvalue = key ":" value
