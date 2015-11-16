@@ -1,4 +1,6 @@
 IDENT = ~"[A-Za-z_][A-Za-z0-9_-]*"
 INTPART = ~"[0-9][0-9_]*"
-INT = ( "+" | "-" )? INTPART
+OCTINT = ( "+" | "-" )? "0o" ~"[0-7_]+"
+HEXINT = ( "+" | "-" )? "0x" ~"[0-7afAF_]+"
+DECINT = ( "+" | "-" )? INTPART
 FLOAT = ( "+" | "-" )? ( INTPART "." | "." INTPART | INTPART "." INTPART ) ( ~"[eE][+-]?" INTPART )?
