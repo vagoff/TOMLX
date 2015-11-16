@@ -3,7 +3,7 @@ file = entry* table*
 table = head entry*
 head = "[" keypath "]" | "[[" keypath "]]"
 keypath = ( key "." )* key
-entry = keypath "=" value
+entry = keypath "=" value?
 
 value = ( tag "@" )? tagless
 tagless = array | object | number | string | boolean | typed | raw
