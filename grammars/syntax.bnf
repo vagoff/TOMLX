@@ -8,15 +8,14 @@ keypath = ( key "." )* key
 entry = keypath "=" expr? NL
 
 expr = app | const
-app = IDENT "()" | IDENT "(" expr ( "," expr )* ","? ")" | IDENT const # note no space between ident and next token allowed!
+app = func "()" | func "(" expr ( "," expr )* ","? ")" | func const # note no space between ident and next token allowed!
 const = array | object | number | string | boolean
 array = "[" expr ( "," expr )* ","? "]"
 object = "{" keyexpr ( "," keyexpr )* ","? "}"
 keyexpr = key ":" expr
 boolean = "true" | "false" | "yes" | "no" | "on" | "off" | "T" | "F" | "Y" | "N"
 
-tag = IDENT
-type = IDENT
+func = IDENT
 key = IDENT | string | number
 number = FLOAT | DECINT | HEXINT | OCTINT | BININT
 string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING
