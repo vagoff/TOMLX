@@ -12,7 +12,7 @@ tagless = array | object | number | string | boolean
 array = "[" value ( "," value )* ","? "]"
 object = "{" keyvalue ( "," keyvalue )* ","? "}"
 keyvalue = key ":" value
-boolean = "true" | "false" | "yes" | "no" | "on" | "off"
+boolean = "true" | "false" | "yes" | "no" | "on" | "off" | "T" | "F" | "Y" | "N"
 
 tag = IDENT
 type = IDENT
