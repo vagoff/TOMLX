@@ -1,7 +1,8 @@
 file = entries table*
 
 table = head entries
-entries = ( ";" | entry )*
+entries = ( entry ( entrysep entry )* entrysep? )?
+entrysep = NL | ";"
 head = "[" keypath "]" NL | "[[" keypath "]]" NL
 keypath = ( key "." )* key
 entry = keypath "=" value? NL
@@ -10,8 +11,8 @@ value = ( tag "@" )? tagless
 tagless = array | object | number | string | boolean | typed | raw
 typed = type raw # note for parser implementor: type and open par must be adjacent, no spaces or newlines allowed!
 raw = "(" (ANY - NL)* ")" # note than () [] {} parens must be balanced inside raw string
-array = "[" value ( ","* value )* ","* "]"
-object = "{" keyvalue ( ","* keyvalue )* ","* "}"
+array = "[" value ( "," value )* ","? "]"
+object = "{" keyvalue ( "," keyvalue )* ","? "}"
 keyvalue = key ":" value
 boolean = "true" | "false" | "yes" | "no" | "on" | "off"
 
