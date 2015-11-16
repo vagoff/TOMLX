@@ -8,7 +8,7 @@ keypath = ( key "." )* key
 entry = keypath "=" expr? NL
 
 expr = app | const
-app = IDENT "()" | IDENT "(" expr ( "," expr )* ","? ")" | IDENT const
+app = IDENT "()" | IDENT "(" expr ( "," expr )* ","? ")" | IDENT const # note no space between ident and next token allowed!
 const = array | object | number | string | boolean
 array = "[" expr ( "," expr )* ","? "]"
 object = "{" keyexpr ( "," keyexpr )* ","? "}"
