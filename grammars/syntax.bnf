@@ -1,6 +1,7 @@
-file = entry* table*
+file = entries table*
 
-table = head entry*
+table = head entries
+entries = ( ";" | entry )*
 head = "[" keypath "]" NL | "[[" keypath "]]" NL
 keypath = ( key "." )* key
 entry = keypath "=" value? NL
