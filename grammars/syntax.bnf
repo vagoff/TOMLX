@@ -12,7 +12,7 @@ raw = "(" (ANY - NL)* ")"
 array = "[" value ( ","* value )* ","* "]"
 object = "{" keyvalue ( ","* keyvalue )* ","* "}"
 keyvalue = key ":" value
-boolean = "true" | "false" | "ues" | "no" | "on" | "off"
+boolean = "true" | "false" | "yes" | "no" | "on" | "off"
 
 tag = IDENT
 type = IDENT
