@@ -8,7 +8,7 @@ Brings new life to old good INI files.
 
 INISON is just JSON except:
 
-* allowing bare identifiers as object keys {a:1.true:2,321:3} (all keys regarded as strings)
+* allowing bare identifiers as object keys {a:1,true:2,321:3} (all keys regarded as strings)
 * conventional unix style comments: {a:1} # my "A"
 * allowing trailing commas [1,2,] or no commas at all [1 2 3]
 * additional quote to disable escaping (')
