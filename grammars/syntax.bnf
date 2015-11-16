@@ -17,5 +17,5 @@ boolean = "true" | "false" | "yes" | "no" | "on" | "off" | "T" | "F" | "Y" | "N"
 tag = IDENT
 type = IDENT
 key = IDENT | string | number
-number = FLOAT | DECINT | HEXINT | OCTINT
+number = FLOAT | DECINT | HEXINT | OCTINT | BININT
 string = SINGLE_STRING | DOUBLE_STRING | TRIPLE_SINGLE_STRING | TRIPLE_DOUBLE_STRING
