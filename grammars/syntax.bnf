@@ -1,9 +1,9 @@
 file = entry* table*
 
 table = head entry*
-head = "[" keypath "]" | "[[" keypath "]]"
+head = "[" keypath "]" NL | "[[" keypath "]]" NL
 keypath = ( key "." )* key
-entry = keypath "=" value?
+entry = keypath "=" value? NL
 
 value = ( tag "@" )? tagless
 tagless = array | object | number | string | boolean | typed | raw
