@@ -5,13 +5,14 @@ entries = ( entry ( entrysep entry )* entrysep? )?
 entrysep = NL | ";"
 head = "[" keypath "]" NL | "[[" keypath "]]" NL
 keypath = ( key "." )* key
-entry = keypath "=" value? NL
+entry = keypath "=" expr? NL
 
-value = tag? tagless # note mandatory tag adjacency to [ { ' "
-tagless = array | object | number | string | boolean
-array = "[" value ( "," value )* ","? "]"
-object = "{" keyvalue ( "," keyvalue )* ","? "}"
-keyvalue = key ":" value
+expr = app | const
+app = IDENT "()" | IDENT "(" expr ( "," expr )* ","? ")" | IDENT const
+const = array | object | number | string | boolean
+array = "[" expr ( "," expr )* ","? "]"
+object = "{" keyexpr ( "," keyexpr )* ","? "}"
+keyexpr = key ":" expr
 boolean = "true" | "false" | "yes" | "no" | "on" | "off" | "T" | "F" | "Y" | "N"
 
 tag = IDENT
