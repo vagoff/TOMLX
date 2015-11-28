@@ -1,0 +1,250 @@
+;; The specification of INISON format in ABNF.
+;; The ABNF grammar is defined in RFC 5234 (http://www.ietf.org/rfc/rfc5234.txt)
+;; All text content must be encoded in ASCII-compatible format.
+
+
+INISON = Expressions;
+
+Expressions
+  = *(
+      *ESpace                      ; Ignore spaces, comments and semicolons.
+      [
+        Expression
+        *ESpace
+        *(
+          ( Newline / Semicolon )  ; Use new lines or semicolons to separate expressions.
+          *ESpace
+          Expression
+          *ESpace
+        )
+      ]
+    )                              ; Allow empty content.
+
+Expression
+  = KeyValue      ; e.g. KEY = VALUE
+  / SectionTitle  ; e.g. [SECTION.SUBSECTION]
+
+ESpace
+  = Space
+  / Newline
+  / Comment
+  / Semicolon
+
+Newline
+  = %x0A     ; LF   (Unix & Linux)
+  / %x0D     ; CR   (Legacy Mac)
+  / %x0D.0A  ; CRLF (Legacy Windows)
+
+Space
+  = %x09  ; Horizontal Tab "	"
+  / %x20  ; Space " "
+
+Comment
+  = CommentStarter *CommentCharacter  ; e.g. # This is a comment till the end of a line.
+
+CommentStarter
+  = %x23  ; Number sign #
+
+CommentCharacter
+  = %x09         ; Horizontal Tab "	"
+  / %x20-7E      ; Normal ASCII characters
+  / %x80-10FFFF  ; Other Unicode characters
+
+Semicolon
+  = %x3B  ; ";"
+
+IdentifierCharacter
+  = %x20         ; Space " "
+  / %x2D         ; Hyphen -
+  / %x30-39      ; Number 0-9
+  / %x41-5A      ; Uppercase Letter A-Z
+  / %x5F         ; Underscore _
+  / %x61-7A      ; Lowercase Letter a-z
+  / %x80-10FFFF  ; Other Unicode characters
+
+SpecialCharacter
+  = ControlCharacter
+  / %x21-2C  ; ! " # $ % & ' ( ) * + ,
+  / %x2E-2F  ; . /
+  / %x3A-40  ; : ; < = > ? @
+  / %x5B-5E  ; [ \ ] ^
+  / %x60     ; `
+  / %x7B-7E  ; { | } ~
+
+ControlCharacter
+  = %x00-19
+  / %x7F
+
+KeyValue
+  = Key *Space KeyValueSeparator *Space Value
+
+KeyValueSeparator
+  = %x3A  ; Colon :
+  / %x3D  ; Equal sign =
+
+Key
+  = 1*IdentifierCharacter
+  / String
+
+Value
+  = String
+  / Boolean
+  / Integer
+  / Float
+  / Array
+  / Dict
+
+String
+  = BasicString
+  ; LiteralString  ; Think about it later.
+
+BasicString
+  = DoubleQuote *BasicCharacter DoubleQuote
+
+DoubleQuote
+  = %x22  ; "
+
+BasicCharacter
+  = NormalCharacter
+  / EscapedCharacter
+
+NormalCharacter
+  = %x20-21
+  ; %x22 Skip DoubleQuote "
+  / %x23-5B
+  ; %x5C Skip Backslash \
+  / %x5D-7E
+  ; %x7F Skip DEL
+  / %x80-10FFFF
+
+EscapedCharacter
+  = Backslash ( %x22                     ; \"
+              / %x5C                     ; \\
+              ; %x62                     ; \b  ; Think about it later.
+              ; %x66                     ; \f  ; Think about it later.
+              / %x6E                     ; \n
+              / %x72                     ; \r
+              / %x74                     ; \t
+              / %x75.7B CodePoints %x7D  ; \u{CodePoints}
+              )
+
+Backslash
+  = %x5C  ; \
+
+CodePoints
+  = CodePoint *( Comma CodePoint )
+
+CodePoint
+  = 1*HexDigit
+
+LiteralString
+  = SingleQuote *LiteralCharacter SingleQuote
+
+SingleQuote
+  = %x27  ; '
+
+LiteralCharacter
+  = %x20-26
+  ; %x27 Skip SingleQuote '
+  / %x28-7E
+  / %x80-10FFFF
+
+Boolean
+  = True
+  / False
+
+True
+  = %x74.72.75.65     ; true
+
+False
+  = %x66.61.6C.73.65  ; false
+
+; A signed or unsigned integer. 64-bit integers recommended.
+Integer
+  = DecimalInteger
+  / HexadecimalInteger
+  / BinaryInteger
+  / OctalInteger
+
+DecimalInteger
+  = [ Sign ] 1*DecDigit   ; Decimal digits optionally prefixed with + or -
+
+Sign
+  = %x2B  ; Plus sign +
+  = %x2D  ; Minus sign -
+
+DecDigit
+  = %x30-39  ; 0-9
+
+HexadecimalInteger
+  = %x30.78 1*HexDigit  ; Hexadecimal digits prefixed with 0x
+
+HexDigit
+  = DecDigit
+  / %x41-46  ; A B C D E F
+  / %x61-66  ; a b c d e f
+
+BinaryInteger
+  = %x30.62 1*BinDigit  ; Binary digits prefixed with 0b
+
+BinDigit
+  = %x30  ; 0
+  / %x31  ; 1
+
+OctalInteger
+  = %x30.6F 1*OctDigit  ; Octal digits prefixed with 0o
+
+OctDigit
+  = %x30-37  ; 0-7
+
+; A floating-point number. Double-precision 64-bit numbers of IEEE 754 standard recommended.
+Float
+  = DecimalInteger ( Fraction [ Exponent ]
+                   / Exponent
+                   )
+
+Fraction
+  = Dot 1*DecDigit  ; A decimal point followed by decimal digits.
+
+Dot
+  = %x2E  ; .
+
+Exponent
+  = ( %x45 / %x65 ) DecimalInteger  ; A letter "E" or "e" followed by a decimal integer.
+
+Array
+  = LeftBracket                                         ; Begin with [
+    [ *VSpace Value *( *VSpace Comma *VSpace Value ) ]  ; Optional comma-separated values
+    [ *VSpace Comma ]                                   ; Allow one trailing comma
+    *VSpace RightBracket                                ; End with ]
+
+LeftBracket
+  = %x5B  ; [
+
+RightBracket
+  = %x5D  ; ]
+
+Comma
+  = %x2C  ; ,
+
+VSpace
+  = Space
+  / Newline
+  / Comment
+
+Dict
+  = LeftBrace                                                 ; Begin with {
+    [ *VSpace KeyValue *( *VSpace Comma *VSpace KeyValue ) ]  ; Optional comma-separated pairs
+    [ *VSpace Comma ]                                         ; Allow one trailing comma
+    *VSpace RightBrace                                        ; End with }
+
+LeftBrace
+  = %x7B  ; {
+
+RightBrace
+  = %x7D  ; }
+
+SectionTitle
+  = LeftBracket                            ; Begin with [
+    *Space Key *( *Space Dot *Space Key )  ; Keys separated by "."
+    *Space RightBracket                    ; End with ]
