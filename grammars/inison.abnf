@@ -6,14 +6,29 @@
 INISON = Expressions;
 
 Expressions
-  = *( Space / Newline / Comment / Semicolon )  ; Ignore spaces, comments and semicolons.
-    [ Expression *( Space / Comment )           ; Allow any spaces and comments after it.
-      [ ( Newline / Semicolon ) Expressions ]   ; New lines or semicolons as separators.
-    ]
+  = *(
+      *ESpace                      ; Ignore spaces, comments and semicolons.
+      [
+        Expression
+        *ESpace
+        *(
+          ( Newline / Semicolon )  ; Use new lines or semicolons to separate expressions.
+          *ESpace
+          Expression
+          *ESpace
+        )
+      ]
+    )                              ; Allow empty content.
 
 Expression
   = KeyValue      ; e.g. KEY = VALUE
   / SectionTitle  ; e.g. [SECTION.SUBSECTION]
+
+ESpace
+  = Space
+  / Newline
+  / Comment
+  / Semicolon
 
 Newline
   = %x0A     ; LF   (Unix & Linux)
