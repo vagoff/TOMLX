@@ -35,6 +35,9 @@ CommentCharacter
   / %x20-7E      ; Normal ASCII characters
   / %x80-10FFFF  ; Other Unicode characters
 
+Semicolon
+  = %x3B  ; ";"
+
 IdentifierCharacter
   = %x20         ; Space " "
   / %x2D         ; Hyphen -
