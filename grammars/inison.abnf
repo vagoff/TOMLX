@@ -64,7 +64,7 @@ SectionTitle
   = "[" *Space Key *( *Space ":" *Space Key ) *Space "]"
 
 GeneralBlock  ; NOT USED YET
-  = SectionTitle *Space ":" *Space SectionMode *Space
+  = SectionTitle *Space ":" *Space SectionMode *( Space / Comment )
     [ Newline *( Newline / BlockCharacter ) ]
     Newline *Space BlockEnd
 
@@ -72,7 +72,7 @@ SectionMode
   = Key
 
 SpecialBlock
-  = SectionTitle *Space ":" *Space SectionTextMode *Space
+  = SectionTitle *Space ":" *Space SectionTextMode *( Space / Comment )
     [ Newline *( Newline / BlockCharacter ) ]
     Newline *Space BlockEnd
   ; e.g.
@@ -82,8 +82,8 @@ SpecialBlock
   ; - [TODO] Make an efficient parser.
   ; - [TODO] Do configuration in INISON.
   ; ::END::
-  / SectionTitle *Space ":" *Space SectionListMode *Space
-    *( 1*Newline [ *Space Value *Space ] )
+  / SectionTitle *Space ":" *Space SectionListMode *( Space / Comment )
+    *( 1*Newline [ *Space Value *( Space / Comment ) ] )
     Newline *Space BlockEnd
   ; e.g.
   ; [ SECTION : SUBSECTION ] : LIST
